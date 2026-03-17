@@ -126,6 +126,9 @@
     function checkParsing() {
         const feedback = document.getElementById('feedback');
     
+        // Ensure options exists before calling .some()
+        if (!currentVerb || !currentVerb.options) return;
+        
         // Check if the user's current selection matches ANY of the valid option objects
         const isCorrect = currentVerb.options.some(validSet => {
             return validSet.t === userSelection.t &&
@@ -138,7 +141,7 @@
         if (isCorrect) {
             feedback.innerHTML = "<span class='success'>Perfect! 🌟</span>";
         } else {
-            feedback.innerHTML = "<span class='error'>Incorrect parsing.</span>";
+            feedback.innerHTML = "<span class='error'>Incorrect parsing. Try again.</span>";
         }
     }
 
