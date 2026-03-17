@@ -82,20 +82,34 @@
 </div>
 
 <script>
-    // Example Greek Verbs
+    // Greek Verbs Database
     const verbs = [
-        { text: "λύομεν", t: "Pres", v: "Act", m: "Ind", p: "1", n: "p" },
-        { text: "ἐλύσατο", t: "Aor", v: "Mid", m: "Ind", p: "3", n: "s" },
-        { text: "λυθήσονται", t: "Fut", v: "Pass", m: "Ind", p: "3", n: "p" }
+        { 
+            text: "λύομεν", 
+            Options: [{t: "Pres", v: "Act", m: "Ind", p: "1", n: "p" },]
+        },
+        { 
+            text: "ἐλύσατο", 
+            Options: [{t: "Aor", v: "Mid", m: "Ind", p: "3", n: "s" },]
+        },
+        { 
+            text: "λυθήσονται", 
+            Opitons: [{t: "Fut", v: "Pass", m: "Ind", p: "3", n: "p" }]
+        },
     ];
 
     let currentVerb = null;
     let userSelection = { t: "", v: "", m: "", p: "", n: "" };
 
     function select(element, value) {
+        // Find the group this button belongs to
         const group = element.parentElement;
         const category = group.getAttribute('data-category');
+        
+        // Remove 'selected' class from all buttons in this group
         group.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+        
+        // Select this one
         element.classList.add('selected');
         userSelection[category] = value;
     }
@@ -104,24 +118,32 @@
         document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
         userSelection = { t: "", v: "", m: "", p: "", n: "" };
         document.getElementById('feedback').innerHTML = "";
+        
         currentVerb = verbs[Math.floor(Math.random() * verbs.length)];
         document.getElementById('word-display').innerText = currentVerb.text;
     }
 
     function checkParsing() {
-        const cats = ['t', 'v', 'm', 'p', 'n'];
-        let score = 0;
-        cats.forEach(c => { if (userSelection[c] === currentVerb[c]) score++; });
-
         const feedback = document.getElementById('feedback');
-        if (score === 5) {
-            feedback.innerHTML = "<span class='success'>Correct! 🏛️</span>";
+    
+        // Check if the user's current selection matches ANY of the valid option objects
+        const isCorrect = currentVerb.options.some(validSet => {
+            return validSet.t === userSelection.t &&
+                   validSet.v === userSelection.v &&
+                   validSet.m === userSelection.m &&
+                   validSet.p === userSelection.p &&
+                   validSet.n === userSelection.n;
+        });
+    
+        if (isCorrect) {
+            feedback.innerHTML = "<span class='success'>Perfect! 🌟</span>";
         } else {
-            feedback.innerHTML = `<span class='error'>${score}/5 Correct</span>`;
+            feedback.innerHTML = "<span class='error'>Incorrect parsing.</span>";
         }
     }
 
     loadNext();
 </script>
+    
 </body>
 </html>
